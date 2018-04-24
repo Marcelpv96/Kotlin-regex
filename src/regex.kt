@@ -2,10 +2,11 @@
  * Created by Marcelpv96 on 22/4/18.
  */
 
-package regex;
+package regex
 
 import java.io.File
 import java.io.InputStream
+
 
 fun ex1(input : String): Boolean {
     var expresion = Regex (pattern = "Nom:\\s*[A-Z][a-z]*\\s*[A-Z][a-z]*\\s*[A-Z][a-z]*\\s*" +
@@ -24,15 +25,18 @@ fun ex1(input : String): Boolean {
 fun ex2(input : String): Boolean {
     var main_expresion = "\\s*Calc\\s*(\\p{Digit}+)\\s*(\\+|\\*|\\/|\\-)\\s*(\\p{Digit}+)\\s*"
     var sub_expresion = Regex(main_expresion)
-    var expresion = Regex (pattern = "["+main_expresion+";]+")
-    var values = expresion.matchEntire(input)!!.value
-    var expresions = values.split(';').dropLast()
-
-    for (expr in expresions){
-        if (!aux_ex2(sub_expresion.matchEntire(expr)!!.groupValues)) return false
+    var expresion = Regex(pattern = "[" + main_expresion + ";]+")
+    try {
+        var given_expresions = expresion.matchEntire(input)!!.value.split(';').dropLast(1)
+        for (expr in given_expresions) {
+            if (!aux_ex2(sub_expresion.matchEntire(expr)!!.groupValues)) return false
+        }
+        return true
+    } catch (e: KotlinNullPointerException) {
+        return false
     }
-    return true
 }
+
 
 fun aux_ex2(values: List<String>): Boolean {
     when{
@@ -44,6 +48,7 @@ fun aux_ex2(values: List<String>): Boolean {
     }
     return true
 }
+
 
 fun main(args : Array<String>){
     val inputStream: InputStream = File("ex2.txt").inputStream()
